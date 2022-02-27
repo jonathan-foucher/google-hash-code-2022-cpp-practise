@@ -45,6 +45,56 @@ public:
         size++;
     }
 
+    void remove(L &data) {
+        if (&(this->head->data) == &data) {
+            this->head = this->head->next;
+            size--;
+            if(size == 0) {
+                this->last = nullptr;
+            }
+            return;
+        }
+
+        node<L> *curr = this->head;
+        for (int i = 0; i < size - 1; ++i) {
+            if (&(curr->next->data) == &data) {
+                if (i == size - 2) {
+                    this->last = curr;
+                }
+                curr->next = curr->next->next;
+                size--;
+                return;
+            }
+            curr = curr->next;
+        }
+    }
+
+    void remove(int index) {
+        if (index >= size || index < 0) {
+            return;
+        }
+
+        if (index == 0) {
+            this->head = this->head->next;
+            size--;
+            if(size == 0) {
+                this->last = nullptr;
+            }
+            return;
+        }
+
+        node<L> *curr = this->head;
+        for (int i = 0; i < index - 1; ++i) {
+            curr = curr->next;
+        }
+
+        if (index == size - 1) {
+            this->last = curr;
+        }
+        curr->next = curr->next->next;
+        size--;
+    }
+
     L *get(int index) {
         node<L> *curr = this->head;
         for (int i = 0; i < index; ++i) {

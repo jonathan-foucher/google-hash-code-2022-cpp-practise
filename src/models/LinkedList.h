@@ -138,6 +138,39 @@ public:
         }
         return true;
     }
+
+    template<typename F>
+    LinkedList<L> filter(F condition) {
+        LinkedList<L> filteredList;
+        node<L> *curr = this->head;
+        for (int i = 0; i < size; ++i) {
+            if (condition(curr->data)) {
+                filteredList.add(curr->data);
+            }
+            curr = curr->next;
+        }
+        return filteredList;
+    }
+
+    template<typename F>
+    void forEach(F function) {
+        node<L> *curr = this->head;
+        for (int i = 0; i < size; ++i) {
+            function(curr->data);
+            curr = curr->next;
+        }
+    }
+
+    template<typename G, typename F>
+    LinkedList<G> map(F function) {
+        LinkedList<G> filteredList;
+        node<L> *curr = this->head;
+        for (int i = 0; i < size; ++i) {
+            filteredList.add(function(curr->data));
+            curr = curr->next;
+        }
+        return filteredList;
+    }
 };
 
 #endif //GOOGLE_HASH_CODE_2022_C___LINKEDLIST_H

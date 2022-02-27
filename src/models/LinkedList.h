@@ -49,7 +49,7 @@ public:
         if (&(this->head->data) == &data) {
             this->head = this->head->next;
             size--;
-            if(size == 0) {
+            if (size == 0) {
                 this->last = nullptr;
             }
             return;
@@ -77,7 +77,7 @@ public:
         if (index == 0) {
             this->head = this->head->next;
             size--;
-            if(size == 0) {
+            if (size == 0) {
                 this->last = nullptr;
             }
             return;
@@ -93,6 +93,35 @@ public:
         }
         curr->next = curr->next->next;
         size--;
+    }
+
+    L *pop(int index) {
+        if (index >= size || index < 0) {
+            return nullptr;
+        }
+
+        if (index == 0) {
+            L *poppedElement = &(this->head->data);
+            this->head = this->head->next;
+            size--;
+            if (size == 0) {
+                this->last = nullptr;
+            }
+            return poppedElement;
+        }
+
+        node<L> *curr = this->head;
+        for (int i = 0; i < index - 1; ++i) {
+            curr = curr->next;
+        }
+
+        if (index == size - 1) {
+            this->last = curr;
+        }
+        L *poppedElement = &(curr->next->data);
+        curr->next = curr->next->next;
+        size--;
+        return poppedElement;
     }
 
     L *get(int index) {

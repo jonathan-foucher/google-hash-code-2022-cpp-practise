@@ -106,6 +106,38 @@ public:
     L *operator[](int index) {
         return get(index);
     }
+
+    template<typename F>
+    std::optional<L> find(F condition) {
+        node<L> *curr = this->head;
+        for (int i = 0; i < size; ++i) {
+            if (condition(curr->data)) {
+                return {curr->data};
+            }
+            curr = curr->next;
+        }
+        return std::nullopt;
+    }
+
+    template<typename F>
+    bool some(F condition) {
+        if (find(condition).has_value()) {
+            return true;
+        }
+        return false;
+    }
+
+    template<typename F>
+    bool every(F condition) {
+        node<L> *curr = this->head;
+        for (int i = 0; i < size; ++i) {
+            if (!condition(curr->data)) {
+                return false;
+            }
+            curr = curr->next;
+        }
+        return true;
+    }
 };
 
 #endif //GOOGLE_HASH_CODE_2022_C___LINKEDLIST_H

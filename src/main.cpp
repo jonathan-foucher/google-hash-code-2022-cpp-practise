@@ -1,5 +1,4 @@
 #include <iostream>
-#include <functional>
 #include "models/LinkedList.h"
 #include "models/Skill.h"
 #include "models/Person.h"
@@ -20,6 +19,9 @@ int main() {
     Skill skill4("Javascript", 4);
     skills.add(skill4);
 
+    Skill skill5("SQL", 3);
+    skills.add(skill5);
+
     Person person("Testo", skills);
 
     std::string nameSearched = "C++";
@@ -32,7 +34,7 @@ int main() {
         return false;
     });
 
-    if(opt.has_value()) {
+    if (opt.has_value()) {
         std::cout << opt.value().name << std::endl;
     } else {
         std::cout << "not found" << std::endl;
@@ -44,7 +46,7 @@ int main() {
         std::cout << s << std::endl;
     });
 
-    person.skills.remove(*skills[4]);
+    person.skills.remove(*skills[5]);
 
     person.skills.map<std::string>([](Skill s) -> std::string {
         return s.name;
@@ -52,13 +54,16 @@ int main() {
         std::cout << s << std::endl;
     });
 
-    person.skills.remove(5);
+    person.skills.remove(7);
 
-    person.skills.map<std::string>([](Skill s) -> std::string {
-        return s.name;
-    }).forEach([](std::string s) -> void {
-        std::cout << s << std::endl;
-    });
+    person.skills.sort([](Skill skillA, Skill skillB) -> bool {
+                return skillA.level > skillB.level;
+            })
+            .map<std::string>([](Skill s) -> std::string {
+                return s.name;
+            }).forEach([](std::string s) -> void {
+                std::cout << s << std::endl;
+            });
 
     return 0;
 }

@@ -200,6 +200,69 @@ public:
         }
         return filteredList;
     }
+
+    template<typename F>
+    LinkedList<L> sort(F sortCondition) {
+        if (size <= 1) {
+            return *this;
+        }
+
+        int middle = size / 2;
+        LinkedList<L> left;
+        LinkedList<L> right;
+        node<L> *curr = this->head;
+
+        for (int i = 0; i < middle; ++i) {
+            left.add(curr->data);
+            curr = curr->next;
+        }
+
+        for (int i = middle; i < size; ++i) {
+            right.add(curr->data);
+            curr = curr->next;
+        }
+
+        LinkedList<L> leftSorted = left.sort(sortCondition);
+        LinkedList<L> rightSorted = right.sort(sortCondition);
+
+        return merge(sortCondition, &leftSorted, &rightSorted);
+    }
+
+private:
+    template<typename F>
+    LinkedList<L> merge(F sortCondition, LinkedList<L> *left, LinkedList<L> *right) {
+        LinkedList<L> mergedList;
+        int leftIndex = 0;
+        int rightIndex = 0;
+        node<L> *leftCurr = left->head;
+        node<L> *rightCurr = right->head;
+
+        while (leftIndex < left->size && rightIndex < right->size) {
+            if (sortCondition(leftCurr->data, rightCurr->data)) {
+                mergedList.add(leftCurr->data);
+                leftCurr = leftCurr->next;
+                leftIndex++;
+            } else {
+                mergedList.add(rightCurr->data);
+                rightCurr = rightCurr->next;
+                rightIndex++;
+            }
+        }
+
+        while (leftIndex < left->size) {
+            mergedList.add(leftCurr->data);
+            leftCurr = leftCurr->next;
+            leftIndex++;
+        }
+
+        while (rightIndex < right->size) {
+            mergedList.add(rightCurr->data);
+            rightCurr = rightCurr->next;
+            rightIndex++;
+        }
+
+        return mergedList;
+    }
 };
 
 #endif //GOOGLE_HASH_CODE_2022_C___LINKEDLIST_H

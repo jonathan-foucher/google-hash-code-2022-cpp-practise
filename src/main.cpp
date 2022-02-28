@@ -1,69 +1,34 @@
 #include <iostream>
 #include "models/LinkedList.h"
-#include "models/Skill.h"
-#include "models/Person.h"
+#include "services/FileService.h"
+#include "services/ProcessingService.h"
+#include <filesystem>
 
+using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
 
 int main() {
-    LinkedList<Skill> skills;
+    std::string inputPath = R"(../resources/input-files)";
+    std::string outputPath = R"(../resources/output-files)";
+    FileService fileService;
+    ProcessingService processingService;
 
-    Skill skill("C++", 2);
-    skills.add(skill);
-
-    Skill skill2("Python", 7);
-    skills.add(skill2);
-
-    Skill skill3("Java", 5);
-    skills.add(skill3);
-
-    Skill skill4("Javascript", 4);
-    skills.add(skill4);
-
-    Skill skill5("SQL", 3);
-    skills.add(skill5);
-
-    Person person("Testo", skills);
-
-    std::string nameSearched = "C++";
-    int levelRequired = 6;
-
-    std::optional<Skill> opt = person.skills.find([nameSearched, levelRequired](Skill s) -> bool {
-        if (s.name == nameSearched && s.level >= levelRequired) {
-            return true;
-        }
-        return false;
-    });
-
-    if (opt.has_value()) {
-        std::cout << opt.value().name << std::endl;
-    } else {
-        std::cout << "not found" << std::endl;
+    LinkedList<std::filesystem::directory_entry> files;
+    for (const auto &dirEntry: recursive_directory_iterator(inputPath)) {
+        files.add(dirEntry);
     }
 
-    person.skills.map<std::string>([](Skill s) -> std::string {
-        return s.name;
-    }).forEach([](std::string s) -> void {
-        std::cout << s << std::endl;
+    files.sort([](const std::filesystem::directory_entry &dirEntryA, const std::filesystem::directory_entry &dirEntryB) -> bool {
+        return dirEntryA.path().filename().compare(dirEntryB.path().filename()) < 0;
+    }).forEach([fileService, outputPath, processingService](const std::filesystem::directory_entry &dirEntry) -> void {
+        std::string fileName = dirEntry.path().filename();
+        std::cout << "processing file : " + fileName << std::endl;
+        LinkedList<std::string> inputContent = fileService.readFile(dirEntry.path());
+
+        LinkedList<std::string> outputContent = processingService.process(inputContent);
+
+        fileService.writeFile(outputPath + "/" + fileName.substr(0, fileName.size() - 4) + "_result.txt", outputContent);
+        std::cout << fileName + " done" << std::endl;
     });
-
-    person.skills.remove(*skills[5]);
-
-    person.skills.map<std::string>([](Skill s) -> std::string {
-        return s.name;
-    }).forEach([](std::string s) -> void {
-        std::cout << s << std::endl;
-    });
-
-    person.skills.remove(7);
-
-    person.skills.sort([](Skill skillA, Skill skillB) -> bool {
-                return skillA.level > skillB.level;
-            })
-            .map<std::string>([](Skill s) -> std::string {
-                return s.name;
-            }).forEach([](std::string s) -> void {
-                std::cout << s << std::endl;
-            });
 
     return 0;
 }

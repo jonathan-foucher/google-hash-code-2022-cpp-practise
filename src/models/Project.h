@@ -4,7 +4,7 @@
 #include <string>
 #include "Skill.h"
 #include "Person.h"
-#include "LinkedList.h"
+#include "../utils/LinkedList.h"
 
 class Project {
 public:

@@ -1,7 +1,7 @@
 #ifndef GOOGLE_HASH_CODE_2022_C___PERSON_H
 #define GOOGLE_HASH_CODE_2022_C___PERSON_H
 
-#include "LinkedList.h"
+#include "../utils/LinkedList.h"
 #include "Skill.h"
 
 class Person {

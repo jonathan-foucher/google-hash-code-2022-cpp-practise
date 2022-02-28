@@ -11,6 +11,7 @@ bool Person::hasSkill(const std::string& skillName, int skillLevel) {
         if(skills[i]->name == skillName && skills[i]->level >= skillLevel) {
             return true;
         }
+        i++;
     }
     return false;
 }

@@ -45,8 +45,8 @@ public:
         size++;
     }
 
-    void remove(L &data) {
-        if (&(this->head->data) == &data) {
+    void remove(L *data) {
+        if (&(this->head->data) == data) {
             this->head = this->head->next;
             size--;
             if (size == 0) {
@@ -57,7 +57,7 @@ public:
 
         node<L> *curr = this->head;
         for (int i = 0; i < size - 1; ++i) {
-            if (&(curr->next->data) == &data) {
+            if (&(curr->next->data) == data) {
                 if (i == size - 2) {
                     this->last = curr;
                 }
@@ -137,11 +137,11 @@ public:
     }
 
     template<typename F>
-    std::optional<L> find(F condition) {
+    std::optional<L*> find(F condition) {
         node<L> *curr = this->head;
         for (int i = 0; i < size; ++i) {
             if (condition(curr->data)) {
-                return {curr->data};
+                return {&curr->data};
             }
             curr = curr->next;
         }
@@ -190,6 +190,15 @@ public:
         }
     }
 
+    template<typename F>
+    void forEachAddr(F function) {
+        node<L> *curr = this->head;
+        for (int i = 0; i < size; ++i) {
+            function(&curr->data);
+            curr = curr->next;
+        }
+    }
+
     template<typename G, typename F>
     LinkedList<G> map(F function) {
         LinkedList<G> filteredList;
@@ -226,6 +235,16 @@ public:
         LinkedList<L> rightSorted = right.sort(sortCondition);
 
         return merge(sortCondition, &leftSorted, &rightSorted);
+    }
+
+    LinkedList<L> makeCopy() {
+        LinkedList<L> copy;
+        node<L> *curr = this->head;
+        for (int i = 0; i < size; i++) {
+            copy.add(curr->data);
+            curr = curr->next;
+        }
+        return copy;
     }
 
 private:

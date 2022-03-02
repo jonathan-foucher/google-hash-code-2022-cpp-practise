@@ -1,20 +1,22 @@
 #include "Project.h"
 
-Project::Project() {}
+#include <utility>
 
-Project::Project(const std::string &name, int duration, int score, int bestBefore, const LinkedList<Skill> &roles) : name(name), duration(duration), score(score), bestBefore(bestBefore), roles(roles) {}
+Project::Project() = default;
 
-bool Project::isFinished() {
+Project::Project(std::string name, int duration, int score, int bestBefore, std::vector<Skill> roles) : name(std::move(name)), duration(duration), score(score), bestBefore(bestBefore), roles(std::move(roles)) {}
+
+bool Project::isFinished() const {
     return progression == duration;
 }
 
-int Project::calculateActualScore(int actualDay) {
+int Project::calculateActualScore(int actualDay) const {
     int scorePenalty = actualDay + duration - bestBefore;
     int actualScore = scorePenalty > 0 ? score - scorePenalty : score;
     return actualScore > 0 ? actualScore : 0;
 }
 
-int Project::getCompletedScore(int actualDay) {
+int Project::getCompletedScore(int actualDay) const {
     int scorePenalty = actualDay - bestBefore;
     int actualScore = scorePenalty > 0 ? score - scorePenalty : score;
     return actualScore > 0 ? actualScore : 0;

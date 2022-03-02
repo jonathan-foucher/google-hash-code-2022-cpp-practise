@@ -2,14 +2,13 @@
 #define GOOGLE_HASH_CODE_2022_C___FILESERVICE_H
 
 #include <fstream>
-
-#include "../utils/LinkedList.h"
+#include <vector>
 
 class FileService {
 public:
-    LinkedList<std::string> readFile(const std::string& filePath) const;
+    static std::vector<std::string> readFile(const std::string &filePath);
 
-    void writeFile(const std::string& filePath, LinkedList<std::string> content) const;
+    static void writeFile(const std::string &filePath, std::vector<std::string> content);
 };
 
 

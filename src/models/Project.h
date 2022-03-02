@@ -2,31 +2,31 @@
 #define GOOGLE_HASH_CODE_2022_C___PROJECT_H
 
 #include <string>
+#include <vector>
 #include "Skill.h"
 #include "Person.h"
-#include "../utils/LinkedList.h"
 
 class Project {
 public:
     std::string name;
-    int duration;
-    int score;
-    int bestBefore;
-    LinkedList<Skill> roles;
-    LinkedList<Person> contributors;
+    int duration{};
+    int score{};
+    int bestBefore{};
+    std::vector<Skill> roles;
+    std::vector<Person*> contributors;
     int progression = 0;
     int orderId = 0;
     bool isInProgress = false;
 
     Project();
 
-    Project(const std::string &name, int duration, int score, int bestBefore, const LinkedList<Skill> &roles);
+    Project(std::string name, int duration, int score, int bestBefore, std::vector<Skill> roles);
 
-    bool isFinished();
+    bool isFinished() const;
 
-    int calculateActualScore(int actualDay);
+    int calculateActualScore(int actualDay) const;
 
-    int getCompletedScore(int actualDay);
+    int getCompletedScore(int actualDay) const;
 };
 
 

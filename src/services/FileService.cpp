@@ -1,22 +1,23 @@
+#include <vector>
 #include "FileService.h"
 
-LinkedList<std::string> FileService::readFile(const std::string &filePath) const {
-    LinkedList<std::string> content;
+std::vector<std::string> FileService::readFile(const std::string &filePath) {
+    std::vector<std::string> content;
     std::string text;
     std::ifstream file(filePath);
 
     while (getline(file, text)) {
-        content.add(text);
+        content.push_back(text);
     }
 
     file.close();
     return content;
 }
 
-void FileService::writeFile(const std::string &filePath, LinkedList<std::string> content) const {
+void FileService::writeFile(const std::string &filePath, std::vector<std::string> content) {
     std::ofstream file(filePath);
 
-    content.forEach([&file](std::string s) -> void {
+    std::for_each(content.begin(), content.end(), [&file](std::string s) -> void {
         file << s << std::endl;
     });
 

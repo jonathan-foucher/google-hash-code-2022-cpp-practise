@@ -6,7 +6,7 @@
 class Skill {
 public:
     std::string name;
-    int level{};
+    int level = 0;
 
     Skill();
 

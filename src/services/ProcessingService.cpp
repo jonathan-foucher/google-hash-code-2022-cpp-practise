@@ -55,6 +55,11 @@ void ProcessingService::fileContentToObjects(vector<string> content) {
 }
 
 void ProcessingService::simulate() {
+    vector<Person *> availablePersons;
+    for (Person &person: persons) {
+        availablePersons.push_back(&person);
+    }
+
     do {
         for (Project &project: projects) {
             if (project.isInProgress) {
@@ -63,7 +68,8 @@ void ProcessingService::simulate() {
                 if (project.isFinished()) {
                     project.isInProgress = false;
                     int contributorIndex = 0;
-                    for_each(project.contributors.begin(), project.contributors.end(), [&project, &contributorIndex](Person *contributor) -> void {
+                    for_each(project.contributors.begin(), project.contributors.end(), [&project, &contributorIndex, &availablePersons](Person *contributor) -> void {
+                        availablePersons.push_back(contributor);
                         contributor->isAvailable = true;
                         Skill role = project.roles[contributorIndex];
                         for (Skill &skill: contributor->skills) {
@@ -78,13 +84,6 @@ void ProcessingService::simulate() {
                     });
                     score += project.getCompletedScore(actualDay);
                 }
-            }
-        }
-
-        vector<Person *> availablePersons;
-        for (Person &person: persons) {
-            if (person.isAvailable) {
-                availablePersons.push_back(&person);
             }
         }
 
